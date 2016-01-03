@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# exit on error
+set -e
+# no undefined variables
+set -u
+
+
+# cancel if wrong number of arguments
+if [ $#  -ne 1 ]; then
+  echo "
+Usage: enc-edit.sh <filename>
+
+Edit an encrypted file and saves it back automatically.
+
+
+To create an encrypted file use:
+
+    openssl enc -aes-256-cbc -salt -in <filename> -out <enc-filename>
+"
+  exit 1
+fi
+
+# file from arg
+FILE=$1
+
+# cancel if file does not exists
+if [ ! -f "$FILE" ]
+then
+  echo "'$FILE' does not exists"
+  exit 1
+fi
+
+# generate temp file name
+TEMP_FILE=".enc-edit-temp-$(date +%s)"
+
+# prompt for password
+read -s -p "enter file password: " PASSWORD
+
+# secure delete temp file
+function cleanup {
+  shred --iterations 3 --zero --remove $TEMP_FILE
+  echo "done."
+}
+
+# cleanup before script exits or if script is interupted
+trap cleanup INT TERM EXIT
+
+echo "
+open file ..."
+
+
+# open file with password and write content in temp file
+openssl enc -aes-256-cbc -d -pass "pass:$PASSWORD" -in $FILE -out $TEMP_FILE
+
+# find editor
+CUSTOM_EDITOR="$( \
+  git config --get core.editor || \
+  (which $EDITOR &> /dev/null && echo $EDITOR) || \
+  (which vim     &> /dev/null && echo vim    ) || \
+  (which nano    &> /dev/null && echo nano   ) \
+)"
+
+# open temp file in editor
+$CUSTOM_EDITOR $TEMP_FILE
+
+# write temp file to original with password
+openssl enc -aes-256-cbc -salt -pass "pass:$PASSWORD" -in $TEMP_FILE -out $FILE
