@@ -43,7 +43,7 @@ function cleanup {
   echo "done."
 }
 
-# cleanup before script exits or if script is interupted
+# cleanup before script exits or if script is interrupted
 trap cleanup INT TERM EXIT
 
 echo "
