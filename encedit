@@ -11,7 +11,7 @@ if [ $#  -ne 1 ]; then
   echo "
 Usage: enc-edit.sh <filename>
 
-Edit an encrypted file and saves it back automatically.
+Edit an encrypted file with your default editor and save it back automatically.
 
 
 To create an encrypted file use:
