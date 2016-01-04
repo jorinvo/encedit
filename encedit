@@ -51,7 +51,7 @@ open file ..."
 
 
 # open file with password and write content in temp file
-openssl enc -aes-256-cbc -d -pass "pass:$PASSWORD" -in $FILE -out $TEMP_FILE
+openssl enc -aes-256-cbc -d -pass "pass:$PASSWORD" -in "$FILE" -out $TEMP_FILE
 
 # find editor
 CUSTOM_EDITOR="$( \
@@ -65,4 +65,4 @@ CUSTOM_EDITOR="$( \
 $CUSTOM_EDITOR $TEMP_FILE
 
 # write temp file to original with password
-openssl enc -aes-256-cbc -salt -pass "pass:$PASSWORD" -in $TEMP_FILE -out $FILE
+openssl enc -aes-256-cbc -salt -pass "pass:$PASSWORD" -in $TEMP_FILE -out "$FILE"
