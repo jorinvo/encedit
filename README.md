@@ -1,7 +1,7 @@
 # encedit
 
-This script helps you editing encrypted files to store some secret information.
-This can be used as a lightweight alternative to cloud solution like LastPass.
+This script helps you editing encrypted files to store secret information.
+It can be used as a lightweight alternative to cloud solutions like LastPass.
 
 
 
